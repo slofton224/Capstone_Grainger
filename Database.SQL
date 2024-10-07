@@ -36,5 +36,5 @@ CREATE TABLE 'Sales Order Items'
 
 #Create table for customer reviews#
 CREATE TABLE 'Customer Reviews' 
-( review_id VARCHAR(20) PRIMARY KEY, so_id VARCHAR(20), mat_id VARCHAR(20) NOT NULL, customer_rating INT, so_sell_price DECIMAL (10, 2) NOT NULL, so_returned_against VARCHAR(20) );
+( review_id VARCHAR(20) PRIMARY KEY, so_id VARCHAR(20) NOT NULL, mat_id VARCHAR(20) NOT NULL, customer_rating INT, so_sell_price DECIMAL (10, 2) NOT NULL, so_returned_against VARCHAR(20) );
 

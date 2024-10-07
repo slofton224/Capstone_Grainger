@@ -7,3 +7,5 @@ data = dbManager.ReadAllData()
 #Print Database rows
 for val in data.fetchall():
     print(val)
+
+#test comment

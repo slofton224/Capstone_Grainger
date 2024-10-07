@@ -2,12 +2,14 @@
 CREATE TABLE 'Material Master' 
 ( mat_id VARCHAR(20) PRIMARY KEY, mat_name VARCHAR(255) NOT NULL, mat_unit_cost DECIMAL(10, 2) NOT NULL, mat_warranty INT );
 
-#Create table for vendor table#
+#Create table for vendors#
 CREATE TABLE 'Vendors' 
 ( vendor_id VARCHAR(20) PRIMARY KEY, vendor_name VARCHAR(255) NOT NULL );
 
-#Create table for customer table#
+#Create table for customers#
 CREATE TABLE 'Customers' 
 ( customer_id VARCHAR(20) PRIMARY KEY, customer_name VARCHAR(255) NOT NULL );
 
-
+#Create table for purchase info records#
+CREATE TABLE 'Purchase Info Record' 
+( pir_id VARCHAR(20) PRIMARY KEY, vendor_id VARCHAR(255) NOT NULL, mat_id VARCHAR(255) NOT NULL);

@@ -8,12 +8,12 @@ class ScoreCardDBManager:
 
 #reading tables: material master 
     def ReadAllData(self):
-        dbReadSql = "SELECT * FROM Material_Master"
+        dbReadSql = "SELECT * FROM sales_order"
         tableValues = self.conn.execute(dbReadSql)
         return tableValues
     
     #reading tables: material master 
     def ReadData(self, table_name):
-        dbReadSql = "SELECT * FROM" + table_name
+        dbReadSql = "SELECT * FROM " +" "+ table_name
         tableValues = self.conn.execute(dbReadSql)
         return tableValues

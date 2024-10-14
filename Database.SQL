@@ -41,8 +41,18 @@ CREATE TABLE 'Customer Reviews'
 #####
 #created derived columns#
 
+#Differences in quanity#
 UPDATE inbound_delivery
 SET inbound_diff = inbound_received_qty - pi.po_qty
 FROM purchase_order_item pi
 WHERE inbound_delivery.po_id = pi.po_id and inbound_delivery.mat_id=pi.mat_id;
 
+#pre/post warranty#
+
+ALTER TABLE Sales_Order_Items 
+ADD is_warranty_valid BOOLEAN GENERATED ALWAYS AS (
+    CASE
+        WHEN (so_created_on + INTERVAL mm.mat_warranty DAY) >= CURRENT_DATE THEN TRUE
+        ELSE FALSE
+    END
+) STORED;

@@ -38,3 +38,11 @@ CREATE TABLE 'Sales Order Items'
 CREATE TABLE 'Customer Reviews' 
 ( review_id VARCHAR(20) PRIMARY KEY, so_id VARCHAR(20) NOT NULL, mat_id VARCHAR(20) NOT NULL, customer_rating INT, so_sell_price DECIMAL (10, 2) NOT NULL, so_returned_against VARCHAR(20) );
 
+#####
+#created derived columns#
+
+UPDATE inbound_delivery
+SET inbound_diff = inbound_received_qty - pi.po_qty
+FROM purchase_order_item pi
+WHERE inbound_delivery.po_id = pi.po_id and inbound_delivery.mat_id=pi.mat_id;
+

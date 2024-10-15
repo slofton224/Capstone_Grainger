@@ -41,18 +41,42 @@ CREATE TABLE 'Customer Reviews'
 #####
 #created derived columns#
 
-#Differences in quanity#
+#Differences in quantity#
 UPDATE inbound_delivery
 SET inbound_diff = inbound_received_qty - pi.po_qty
 FROM purchase_order_item pi
 WHERE inbound_delivery.po_id = pi.po_id and inbound_delivery.mat_id=pi.mat_id;
 
-#pre/post warranty#
+#so_warrranty_calculation#
 
-ALTER TABLE Sales_Order_Items 
-ADD is_warranty_valid BOOLEAN GENERATED ALWAYS AS (
-    CASE
-        WHEN (so_created_on + INTERVAL mm.mat_warranty DAY) >= CURRENT_DATE THEN TRUE
-        ELSE FALSE
+UPDATE sales_order_item
+SET so_warranty_calculation = (
+    SELECT 
+        julianday(header_original.so_created_on) - julianday(header_returned.so_created_on)
+    FROM 
+        sales_order_header AS header_original
+    JOIN sales_order_header AS header_returned
+        ON sales_order_item.so_returned_against = header_returned.so_id
+    WHERE 
+        sales_order_item.so_id = header_original.so_id
+)
+WHERE so_returned_against IS NOT NULL;
+
+#so_pre_post_warranty#
+UPDATE sales_order_item
+SET so_pre_post_warranty = (
+    CASE 
+        WHEN so_warranty_calculation <= (
+            SELECT mat_warranty 
+            FROM material_master 
+            WHERE material_master.mat_id = sales_order_item.mat_id
+        ) THEN 'Pre-warranty'
+        ELSE 'Post-warranty'
     END
-) STORED;
+)
+WHERE so_warranty_calculation IS NOT NULL
+AND EXISTS (
+    SELECT 1 
+    FROM material_master 
+    WHERE material_master.mat_id = sales_order_item.mat_id
+);

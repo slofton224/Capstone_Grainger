@@ -1,16 +1,6 @@
 import sqlite3
-import Scorecard_DB_Manager
+from cost_variance_score import calculate_cost_variance_score
 
-#preparing for PowerBI script
-pip install pandas
-pip install matplotlib
-
-dbManager = Scorecard_DB_Manager.ScoreCardDBManager()
-data = dbManager.ReadAllData()
-
-#Print Database rows
-for val in data.fetchall():
-    print(val)
-
-#test comment
-#testing pushing and pulling
+# Calculate the cost variance score
+score_df = calculate_cost_variance_score()
+print(score_df)

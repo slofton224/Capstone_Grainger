@@ -41,14 +41,21 @@ CREATE TABLE 'Customer Reviews'
 #####
 #created derived columns#
 
-#Differences in quantity#
+#so_diff_qty# -- Difference in PO quantity and received quanity
 UPDATE inbound_delivery
 SET inbound_diff = inbound_received_qty - pi.po_qty
 FROM purchase_order_item pi
 WHERE inbound_delivery.po_id = pi.po_id and inbound_delivery.mat_id=pi.mat_id;
 
-#so_warrranty_calculation#
+#so_diff_delivery# -- Difference in PO delivery date and actual delivery date
+UPDATE inbound_delivery
+SET inbound_diff_delivery = (
+  SELECT julianday(inbound_delivered_date) - julianday(po_delivery_date) 
+  FROM purchase_order_header 
+  WHERE purchase_order_header.po_id = inbound_delivery.po_id
+);
 
+#so_warrranty_calculation# -- Date difference between sales order and return order
 UPDATE sales_order_item
 SET so_warranty_calculation = (
     SELECT 
@@ -62,7 +69,7 @@ SET so_warranty_calculation = (
 )
 WHERE so_returned_against IS NOT NULL;
 
-#so_pre_post_warranty#
+#so_pre_post_warranty# -- Determine if return order falls into pre- or post-warranty
 UPDATE sales_order_item
 SET so_pre_post_warranty = (
     CASE 

@@ -39,15 +39,27 @@ CREATE TABLE 'Customer Reviews'
 ( review_id VARCHAR(20) PRIMARY KEY, so_id VARCHAR(20) NOT NULL, mat_id VARCHAR(20) NOT NULL, customer_rating INT, so_sell_price DECIMAL (10, 2) NOT NULL, so_returned_against VARCHAR(20) );
 
 #####
-#created derived columns#
+#Create derived columns#
+ALTER TABLE inbound_delivery
+ADD COLUMN inbound_diff_qty INTEGER;
+
+ALTER TABLE inbound_delivery
+ADD COLUMN inbound_diff_delivery INTEGER;
+
+ALTER TABLE sales_order_item
+ADD COLUMN so_warrranty_calculation INTEGER;
+
+ALTER TABLE sales_order_item
+ADD COLUMN so_pre_post_warranty TEXT;
+
 
 #so_diff_qty# -- Difference in PO quantity and received quanity
 UPDATE inbound_delivery
 SET inbound_diff = inbound_received_qty - pi.po_qty
 FROM purchase_order_item pi
-WHERE inbound_delivery.po_id = pi.po_id and inbound_delivery.mat_id=pi.mat_id;
+WHERE inbound_delivery.po_id = pi.po_id and inbound_delivery.mat_id = pi.mat_id;
 
-#so_diff_delivery# -- Difference in PO delivery date and actual delivery date
+#so_diff_delivery# -- Date difference in PO delivery date and actual delivery date
 UPDATE inbound_delivery
 SET inbound_diff_delivery = (
   SELECT julianday(inbound_delivered_date) - julianday(po_delivery_date) 

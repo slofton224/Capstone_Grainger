@@ -24,15 +24,14 @@ def calculate_cost_variance_score() -> pd.DataFrame:
         SELECT mat_id, mat_unit_cost 
         FROM material_master;
     """
-
+    # storing the query outputs in dfs
     purchase_order_item = dbManager.fetch_data(purchase_order_query)
     material_master = dbManager.fetch_data(material_master_query)
 
-    # Merging the two DataFrames on 'mat_id' to populate the unit price against each
+    # Merging the two DataFrames on 'mat_id' to populate the unit price against each po id
     merged_data = purchase_order_item.merge(material_master, on='mat_id', how='left')
 
-    # Grouping the merged data by mat_id to find min and max costs across different purchase orders
-    # then agg functions by finding the max and min 
+    # Grouping the merged data by mat_id into a dataframe to find min and max costs across different purchase orders
     cost_variance = merged_data.groupby('mat_id').agg(old_cost=('po_unit_cost', 'min'), new_cost=('po_unit_cost', 'max')).reset_index()
 
     # Calculating the cost variance
@@ -56,4 +55,8 @@ def calculate_cost_variance_score() -> pd.DataFrame:
     # Applying the scoring function
     cost_variance['score'] = cost_variance['cost_variance'].apply(score_variance)
 
+    #returning df with score against each item 
     return cost_variance[['mat_id', 'cost_variance', 'score']]
+
+# currently this is returning dataframe against each item, need to modify to make it against each vendor by 
+# bringing in pir table    

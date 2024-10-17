@@ -1,3 +1,6 @@
+
+
+
 import pandas as pd
 import sqlite3
 
@@ -21,7 +24,7 @@ def list_tables(db_name):
 # Calculation of the post-warranty vendor return rate
 def calculate_post_warranty_return_rate(sales_orders: pd.DataFrame, sales_order_items: pd.DataFrame, 
                                           purchase_orders: pd.DataFrame, purchase_order_items: pd.DataFrame,
-                                          materials: pd.DataFrame) -> pd.DataFrame:
+                                          materials: pd.DataFrame, vendors: pd.DataFrame) -> pd.DataFrame:
     # Merge sales order items with sales orders
     merged_data = sales_order_items.merge(sales_orders, on='so_id', how='left')
 
@@ -40,14 +43,18 @@ def calculate_post_warranty_return_rate(sales_orders: pd.DataFrame, sales_order_
         (merged_data['mat_warranty'] < merged_data['so_warranty_calculation'])
     ]
 
-    # Group by vendor_id and calculate the total and returned quantities
+    # Group by vendor_id to calculate total and returned quantities
     return_rate = vendor_return_data.groupby('vendor_id').agg(
         total_quantity=('so_qty', 'sum'),
         returned_quantity=('so_qty', 'count')
     ).reset_index()
 
+    # Merge with vendors table to ensure all vendors are included
+    return_rate = vendors.merge(return_rate, on='vendor_id', how='left').fillna(0)
+
     # Calculate the return rate as a percentage
-    return_rate['vendor_return_rate'] = (return_rate['returned_quantity'] / return_rate['total_quantity']) * 100
+    return_rate['vendor_return_rate'] = (return_rate['returned_quantity'] / return_rate['total_quantity'].replace(0, 1)) * 100
+    return_rate['vendor_return_rate'] = return_rate['vendor_return_rate'].fillna(0)  # Set NaN return rates to 0
 
     return return_rate[['vendor_id', 'vendor_return_rate']]
 
@@ -86,6 +93,11 @@ def main():
         SELECT mat_id, mat_warranty
         FROM material_master;
     """
+    
+    vendor_query = """
+        SELECT vendor_id
+        FROM vendor_master;
+    """
 
     # Fetch the data into DataFrames
     sales_orders = fetch_data(conn, sales_order_query)
@@ -93,12 +105,13 @@ def main():
     purchase_orders = fetch_data(conn, purchase_order_query)
     purchase_order_items = fetch_data(conn, purchase_order_item_query)
     materials = fetch_data(conn, materials_query)
+    vendors = fetch_data(conn, vendor_query)
 
     # Close the database connection
     conn.close()
 
     # Calculate the post-warranty vendor return rate
-    return_rate_df = calculate_post_warranty_return_rate(sales_orders, sales_order_items, purchase_orders, purchase_order_items, materials)
+    return_rate_df = calculate_post_warranty_return_rate(sales_orders, sales_order_items, purchase_orders, purchase_order_items, materials, vendors)
 
     print("Final Post-Warranty Vendor Return Rate DataFrame:")
     print(return_rate_df)

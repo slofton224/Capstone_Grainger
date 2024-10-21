@@ -76,16 +76,16 @@ def main():
     print("Vendor Average Customer Ratings DataFrame:")
     print(average_rating_df)
 
-    def score_rating(rating): # Used integers (out of 10) instead of percentage. All materials seem to score 10 -> need to change. Also need to change scoring table in Excel.
-        if rating <= 2:
+    def score_rating(rating): # Used integers (out of 10) instead of percentage
+        if rating < 4:
             return 0
-        elif rating <= 3:
-            return 2
-        elif rating <= 4:
-            return 4
         elif rating <= 5:
-            return 6
+            return 2
         elif rating <= 6:
+            return 4
+        elif rating <= 7:
+            return 6
+        elif rating <= 8:
             return 8
         else:
             return 10

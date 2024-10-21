@@ -86,17 +86,17 @@ def main():
 
     def score_on_time(on_time_rate):
         if on_time_rate <= 10:
-            return 10
-        elif on_time_rate <= 20:
-            return 8
-        elif on_time_rate <= 30:
-            return 6
-        elif on_time_rate <= 40:
-            return 4
-        elif on_time_rate <= 50:
-            return 2
-        else:
             return 0
+        elif on_time_rate <= 20:
+            return 2
+        elif on_time_rate <= 30:
+            return 4
+        elif on_time_rate <= 40:
+            return 6
+        elif on_time_rate <= 50:
+            return 8
+        else:
+            return 10
 
     # Applying the scoring function
     on_time_delivery_rate_df['score'] = on_time_delivery_rate_df['on_time_delivery_rate'].apply(score_on_time)
@@ -110,6 +110,3 @@ def main():
 # Run the main function
 if __name__ == "__main__":
     main()
-
-#Notes
-#This calculates on-time deliveries instead of late deliveries -> need to change calculation equation or change scoring table

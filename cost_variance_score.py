@@ -55,8 +55,14 @@ def calculate_cost_variance_score() -> pd.DataFrame:
     # Applying the scoring function
     cost_variance['score'] = cost_variance['cost_variance'].apply(score_variance)
 
+    # Print the df with score for each item - added by Conrad
+    print(cost_variance[['mat_id', 'cost_variance', 'score']])
+
     #returning df with score against each item 
     return cost_variance[['mat_id', 'cost_variance', 'score']]
+
+# Call function - added by Conrad
+calculate_cost_variance_score()
 
 # currently this is returning dataframe against each item, need to modify to make it against each vendor by 
 # bringing in pir table    

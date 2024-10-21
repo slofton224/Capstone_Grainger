@@ -89,6 +89,29 @@ def main():
     print("Final Vendor Over-Delivery Rate DataFrame:")
     print(over_delivery_rate_df)
 
+    def score_over_delivered(over_delivery_rate):
+        if over_delivery_rate <= 0:
+            return 10
+        elif over_delivery_rate <= 5:
+            return 8
+        elif over_delivery_rate <= 10:
+            return 6
+        elif over_delivery_rate <= 15:
+            return 4
+        elif over_delivery_rate <= 20:
+            return 2
+        else:
+            return 0
+
+    # Applying the scoring function
+    over_delivery_rate_df['score'] = over_delivery_rate_df['over_delivery_rate'].apply(score_over_delivered)
+
+    # Print the df with score for each item
+    print(over_delivery_rate_df[['vendor_id', 'vendor_name', 'over_delivery_rate', 'score']])
+
+    #returning df with score against each item 
+    return over_delivery_rate_df[['vendor_id', 'vendor_name', 'over_delivery_rate', 'score']]
+
 # Run the main function
 if __name__ == "__main__":
     main()

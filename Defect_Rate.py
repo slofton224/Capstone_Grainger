@@ -77,6 +77,29 @@ def main():
     print("Final Vendor Defect Rate DataFrame:")
     print(defect_rate_df)
 
+    def score_defect(defect):
+        if defect <= 5:
+            return 10
+        elif defect <= 10:
+            return 8
+        elif defect <= 15:
+            return 6
+        elif defect <= 20:
+            return 4
+        elif defect <= 25:
+            return 2
+        else:
+            return 0
+
+    # Applying the scoring function
+    defect_rate_df['score'] = defect_rate_df['defect_rate'].apply(score_defect)
+
+    # Print the df with score for each item
+    print(defect_rate_df[['vendor_id', 'vendor_name', 'defect_rate', 'score']])
+
+    #returning df with score against each item 
+    return defect_rate_df[['vendor_id', 'vendor_name', 'defect_rate', 'score']]
+
 # Run the main function
 if __name__ == "__main__":
     main()

@@ -89,6 +89,29 @@ def main():
     print("Final Vendor Under-Delivery Rate DataFrame:")
     print(under_delivery_rate_df)
 
+    def score_under_delivered(under_delivered_rate):
+        if under_delivered_rate <= 0:
+            return 10
+        elif under_delivered_rate <= 5:
+            return 8
+        elif under_delivered_rate <= 10:
+            return 6
+        elif under_delivered_rate <= 15:
+            return 4
+        elif under_delivered_rate <= 20:
+            return 2
+        else:
+            return 0
+
+    # Applying the scoring function
+    under_delivery_rate_df['score'] = under_delivery_rate_df['under_delivery_rate'].apply(score_under_delivered)
+
+    # Print the df with score for each item
+    print(under_delivery_rate_df[['vendor_id', 'vendor_name', 'under_delivery_rate', 'score']])
+
+    #returning df with score against each item 
+    return under_delivery_rate_df[['vendor_id', 'vendor_name', 'under_delivery_rate', 'score']]
+
 # Run the main function
 if __name__ == "__main__":
     main()

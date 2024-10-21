@@ -116,6 +116,29 @@ def main():
     print("Final Post-Warranty Vendor Return Rate DataFrame:")
     print(return_rate_df)
 
+    def score_return(return_rate):
+        if return_rate <= 5:
+            return 10
+        elif return_rate <= 10:
+            return 8
+        elif return_rate <= 15:
+            return 6
+        elif return_rate <= 20:
+            return 4
+        elif return_rate <= 25:
+            return 2
+        else:
+            return 0
+
+    # Applying the scoring function
+    return_rate_df['score'] = return_rate_df['vendor_return_rate'].apply(score_return)
+
+    # Print the df with score for each item
+    print(return_rate_df[['vendor_id', 'vendor_return_rate', 'score']])
+
+    #returning df with score against each item 
+    return return_rate_df[['vendor_id', 'vendor_return_rate', 'score']]
+
 # Run the main function
 if __name__ == "__main__":
     main()

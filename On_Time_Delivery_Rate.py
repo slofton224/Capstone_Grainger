@@ -84,6 +84,32 @@ def main():
     print("Final Vendor On-Time Delivery Rate DataFrame:")
     print(on_time_delivery_rate_df)
 
+    def score_on_time(on_time_rate):
+        if on_time_rate <= 10:
+            return 10
+        elif on_time_rate <= 20:
+            return 8
+        elif on_time_rate <= 30:
+            return 6
+        elif on_time_rate <= 40:
+            return 4
+        elif on_time_rate <= 50:
+            return 2
+        else:
+            return 0
+
+    # Applying the scoring function
+    on_time_delivery_rate_df['score'] = on_time_delivery_rate_df['on_time_delivery_rate'].apply(score_on_time)
+
+    # Print the df with score for each item
+    print(on_time_delivery_rate_df[['vendor_id', 'vendor_name', 'on_time_delivery_rate', 'score']])
+
+    #returning df with score against each item 
+    return on_time_delivery_rate_df[['vendor_id', 'vendor_name', 'on_time_delivery_rate', 'score']]
+
 # Run the main function
 if __name__ == "__main__":
     main()
+
+#Notes
+#This calculates on-time deliveries instead of late deliveries -> need to change calculation equation or change scoring table

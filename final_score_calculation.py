@@ -1,6 +1,6 @@
 import pandas as pd
 from Defect_Rate import calculate_vendor_defect_rate  # Import your function from the defect_rate.py file
-from Customer_Reviews import calculate_average_customer_rating # Import function for customer reviews
+from NO_Customer_Reviews import calculate_average_customer_rating # Import function for customer reviews
 from Prewarranty_Return_Rate import calculate_vendor_return_rate
 from Postwarranty_Return_Rate import calculate_post_warranty_return_rate  # Import functions for return rates
 from On_Time_Delivery_Rate import calculate_on_time_delivery_rate#from delivery_performance import calculate_delivery_performance  # Import delivery performance functions

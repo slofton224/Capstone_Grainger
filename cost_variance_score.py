@@ -63,8 +63,8 @@ def calculate_cost_variance_score() -> pd.DataFrame:
     cost_variance['score'] = cost_variance['cost_variance'].apply(score_variance)
     
     #returning df with score against each item 
-    #return cost_variance[['mat_id', 'cost_variance', 'score']]
+    return cost_variance[['mat_id', 'cost_variance', 'score']]
 
-    merged_vendor = cost_variance.merge(purchase_info, on='mat_id', how='left')
+    #merged_vendor = cost_variance.merge(purchase_info, on='mat_id', how='left')
 
-    return merged_vendor[['vendor_id', 'mat_id', 'cost_variance', 'score']]
+    #return merged_vendor[['vendor_id', 'mat_id', 'cost_variance', 'score']]

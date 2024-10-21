@@ -7,6 +7,9 @@ class ScoreCardDBManager:
         self.DBName = "Grainger_DB.db"
         self.conn = sqlite3.connect(self.DBName)
 
+    def __del__(self):
+        self.conn.close()
+
 #reading tables: material master 
     # def ReadAllData(self):
     #     dbReadSql = "SELECT * FROM sales_order"

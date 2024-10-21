@@ -47,7 +47,7 @@ ALTER TABLE inbound_delivery
 ADD COLUMN inbound_diff_delivery INTEGER;
 
 ALTER TABLE sales_order_item
-ADD COLUMN so_warrranty_calculation INTEGER;
+ADD COLUMN so_warranty_calculation INTEGER;
 
 ALTER TABLE sales_order_item
 ADD COLUMN so_pre_post_warranty TEXT;
@@ -67,7 +67,7 @@ SET inbound_diff_delivery = (
   WHERE purchase_order_header.po_id = inbound_delivery.po_id
 );
 
-#so_warrranty_calculation# -- Date difference between sales order and return order
+#so_warranty_calculation# -- Date difference between sales order and return order
 UPDATE sales_order_item
 SET so_warranty_calculation = (
     SELECT 

@@ -40,7 +40,7 @@ def calculate_on_time_delivery_rate() -> pd.DataFrame:
     # Calculate the on-time delivery rate as a percentage
     on_time_rate['on_time_delivery_rate'] = (on_time_rate['on_time_deliveries'] / on_time_rate['total_deliveries']) * 100
 
-    # Scores assigned based on the defect rate
+    # Scores assigned based on the on_time rate
     def score_on_time(on_time_rate):
         if on_time_rate <= 10:
             return 0

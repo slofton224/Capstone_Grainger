@@ -10,37 +10,34 @@ from on_time_delivery_score import calculate_on_time_delivery_rate
 from post_warranty_score import calculate_post_warranty_score
 from pre_warranty_score import calculate_pre_warranty_score
  
- 
- 
 # cost variance score against each item
-#score_df = calculate_cost_variance_score()
-#print(score_df)
+score_cost_variance_df = calculate_cost_variance_score()
+print(score_cost_variance_df)
+
+# over delivery rate score against each item 
+score_over_delivery_df = calculate_over_delivery_rate()
+print(score_over_delivery_df)
  
+# Under delivery rate score against each item
+score_under_delivered_df = calculate_under_delivery_rate()
+print(score_under_delivered_df)
 
-#over delivery rate for each item 
-#score_over_delivery_df = calculate_over_delivery_rate()
-#print (score_over_delivery_df)
- 
-# Under delivery rate for each item
-# score_under_delivered_df = calculate_under_delivery_rate
-# print(score_under_delivered_df)
+# on time delivery score against each item
+score_on_time_df = calculate_on_time_delivery_rate()
+print(score_on_time_df)
 
-#on time delivery
-#on_time_df = calculate_on_time_delivery_rate()
-#print(on_time_df)
-
-#customer review score 
-# score_df=calculate_customer_review_score()
-# print(score_df)
+# customer review score against each item
+score_customer_review_df = calculate_customer_review_score()
+print(score_customer_review_df)
  
 # defect rate score against each item
-# defect_score_df = calculate_vendor_defect_rate()
-# print(defect_score_df)
+score_defect_df = calculate_vendor_defect_rate()
+print(score_defect_df)
  
-#post warranty 
-#postw_score_df = calculate_post_warranty_score()
-#print(postw_score_df)
+# post warranty score against each item
+score_postw_df = calculate_post_warranty_score()
+print(score_postw_df)
 
-#pre warranty 
-#prew_score_df = calculate_pre_warranty_score()  
-#print(prew_score_df)
+# pre warranty score against each item
+score_prew_df = calculate_pre_warranty_score()  
+print(score_prew_df)

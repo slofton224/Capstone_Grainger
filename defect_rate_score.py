@@ -1,23 +1,6 @@
 import pandas as pd
 import Scorecard_DB_Manager
 
-# Connecting to the database
-# def connect_to_database(db_name):
-#    return sqlite3.connect(db_name)
-
-# Fetching data from the database
-# def fetch_data(conn, query):
-#    return pd.read_sql_query(query, conn)
-
-# List tables in the database
-# def list_tables(db_name):
-#    conn = sqlite3.connect(db_name)
-#    cursor = conn.cursor()
-#    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-#    tables = cursor.fetchall()
-#    conn.close()
-#    return tables
-
 # Calculation of the defect rate by vendor
 def calculate_vendor_defect_rate() -> pd.DataFrame:
 

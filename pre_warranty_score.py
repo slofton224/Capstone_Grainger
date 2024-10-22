@@ -6,24 +6,24 @@ def calculate_pre_warranty_score() -> pd.DataFrame:
 
     # SQL query to fetch data from sales_order_item table
     sales_order_item_query = """
-        SELECT so_id, mat_id, qty, so_returned_against, so_pre_post_warranty 
+        SELECT so_id, mat_id, so_qty, so_returned_against, so_pre_post_warranty 
         FROM sales_order_item;
     """
 
     # Fetching the sales order items data
     sales_order_item = dbManager.fetch_data(sales_order_item_query)
 
-    # Filtering for post-warranty items
-    post_warranty_items = sales_order_item[sales_order_item['pre_post_warranty'] == 'Pre_warranty']
+    # Filtering for pre-warranty items
+    pre_warranty_items = sales_order_item[sales_order_item['so_pre_post_warranty'] == 'Pre-warranty']
 
     # Calculating total quantities sold and returned quantities
-    total_sold = sales_order_item.groupby('mat_id')['qty'].sum().reset_index(name='total_qty_sold')
-    returned_qty = post_warranty_items.groupby('mat_id')['qty'].sum().reset_index(name='returned_qty')
+    total_sold = sales_order_item.groupby('mat_id')['so_qty'].sum().reset_index(name='total_qty_sold')
+    returned_qty = pre_warranty_items.groupby('mat_id')['so_qty'].sum().reset_index(name='returned_qty')
 
     # Merging total sold and returned quantities
     summary = total_sold.merge(returned_qty, on='mat_id', how='left').fillna(0)
 
-    # Calculating post warranty ratio
+    # Calculating pre warranty ratio
     summary['pre_warranty_ratio'] = summary['returned_qty'] / summary['total_qty_sold']
     
     # Function to assign scores based on post warranty ratio

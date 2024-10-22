@@ -1,6 +1,6 @@
 import sqlite3
 from cost_variance_score import calculate_cost_variance_score
-from customer_review import calculate_customer_review_score
+from customer_review_score import calculate_customer_review_score
 from Defect_Rate import calculate_vendor_defect_rate
 
 from post_warranty_score import calculate_post_warranty_score

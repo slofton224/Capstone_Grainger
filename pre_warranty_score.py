@@ -1,7 +1,7 @@
 import pandas as pd
 import Scorecard_DB_Manager
 
-def calculate_post_warranty_score() -> pd.DataFrame:
+def calculate_pre_warranty_score() -> pd.DataFrame:
     dbManager = Scorecard_DB_Manager.ScoreCardDBManager()
 
     # SQL query to fetch data from sales_order_item table

@@ -60,15 +60,3 @@ class ScoreCardDBManager:
         # Execute the pre- or post-warranty SQL
         self.conn.execute(pre_post_warranty_sql)
         self.conn.commit()
-
-# Example usage of the class
-if __name__ == "__main__":
-    # Create an instance of the ScoreCardDBManager class
-    db_manager = ScoreCardDBManager()
-
-    # Perform SQL transformations
-    db_manager.perform_sql_transformations()
-
-    # Fetch data to verify transformations (optional)
-    df = db_manager.fetch_data("SELECT * FROM sales_order_item")
-    print(df)

@@ -9,23 +9,23 @@ from Under_Delivered import calculate_under_delivery_rate
 #print(score_df)
 
 
-# #over delivery rate for each item 
+#over delivery rate for each item 
 
-# score_over_delivery_df = calculate_over_delivery_rate () 
+score_over_delivery_df = calculate_over_delivery_rate() 
 
-# print (score_over_delivery_df) 
+print (score_over_delivery_df) 
 
 
 
-#Under delivery rate for each item 
+# Under delivery rate for each item 
 
 # score_under_delivered_df = calculate_under_delivery_rate 
 
 # print(score_under_delivered_df) 
 
-score_df=calculate_customer_review_score()
-print(score_df)
+# score_df=calculate_customer_review_score()
+# print(score_df)
 
-# defect rate score against each item
-defect_score_df = calculate_vendor_defect_rate()
-print(defect_score_df)
+# # defect rate score against each item
+# defect_score_df = calculate_vendor_defect_rate()
+# print(defect_score_df)

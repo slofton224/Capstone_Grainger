@@ -1,117 +1,131 @@
-import pandas as pd
-import sqlite3
+import pandas as pd 
 
-# Connecting to the database
-def connect_to_database(db_name):
-    return sqlite3.connect(db_name)
+import Scorecard_DB_Manager 
 
-# Fetching data from the database
-def fetch_data(conn, query):
-    return pd.read_sql_query(query, conn)
+ 
 
-# List tables in the database
-def list_tables(db_name):
-    conn = sqlite3.connect(db_name)
-    cursor = conn.cursor()
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    tables = cursor.fetchall()
-    conn.close()
-    return tables
+def calculate_over_delivery_rate() -> pd.DataFrame: 
 
-# Calculation of the over-delivery rate by vendor
-def calculate_over_delivery_rate(inbound_delivery: pd.DataFrame, purchase_order_items: pd.DataFrame, purchase_orders: pd.DataFrame, vendors: pd.DataFrame) -> pd.DataFrame:
-    # Merge inbound deliveries with purchase order items to get ordered quantities and material info
-    merged_data = inbound_delivery.merge(purchase_order_items[['po_id', 'mat_id', 'po_qty']], on=['po_id', 'mat_id'], how='left')
+ 
 
-    # Merge with purchase orders to get vendor information
-    merged_data = merged_data.merge(purchase_orders[['po_id', 'vendor_id']], on='po_id', how='left')
+    dbManager = Scorecard_DB_Manager.ScoreCardDBManager() 
 
-    # Calculate whether each delivery is over-delivered (True/False)
-    merged_data['over_delivered'] = merged_data['inbound_received_qty'] > merged_data['po_qty']
+ 
 
-    # Group by vendor_id and calculate total deliveries and over-delivered deliveries
-    over_delivery_data = merged_data.groupby('vendor_id').agg(
-        total_deliveries=('po_id', 'count'),
-        over_delivered_count=('over_delivered', 'sum')
-    ).reset_index()
+    # SQL queries to pull needed columns 
 
-    # Calculate the over-delivery rate as a percentage
-    over_delivery_data['over_delivery_rate'] = (over_delivery_data['over_delivered_count'] / over_delivery_data['total_deliveries']) * 100
+    inbound_delivery_query = """ 
 
-    # Merge with vendor names for readability
-    over_delivery_data = over_delivery_data.merge(vendors[['vendor_id', 'vendor_name']], on='vendor_id', how='left')
+        SELECT po_id, mat_id, inbound_received_qty 
 
-    return over_delivery_data[['vendor_id', 'vendor_name', 'over_delivery_rate']]
+        FROM inbound_delivery; 
 
-# Main code to fetch data from the database and calculate the over-delivery rate
-def main():
-    # Connect to the database
-    db_name = 'Grainger_DB.db'
-    conn = connect_to_database(db_name)
+    """ 
 
-    # List all tables
-    tables = list_tables(db_name)
-    print("Tables in the database:", tables)
+     
 
-    # Define SQL queries for relevant tables
-    inbound_delivery_query = """
-        SELECT po_id, mat_id, inbound_received_qty
-        FROM inbound_delivery;
-    """
-    
-    purchase_order_item_query = """
-        SELECT po_id, mat_id, po_qty
-        FROM purchase_order_item;
-    """
-    
-    purchase_order_query = """
-        SELECT po_id, vendor_id
-        FROM purchase_order_header;
-    """
-    
-    vendor_master_query = """
-        SELECT vendor_id, vendor_name
-        FROM vendor_master;
-    """
+    purchase_order_item_query = """ 
 
-    # Fetch the data into DataFrames
-    inbound_delivery = fetch_data(conn, inbound_delivery_query)
-    purchase_order_items = fetch_data(conn, purchase_order_item_query)
-    purchase_orders = fetch_data(conn, purchase_order_query)
-    vendors = fetch_data(conn, vendor_master_query)
+        SELECT po_id, mat_id, po_qty 
 
-    # Close the database connection
-    conn.close()
+        FROM purchase_order_item; 
 
-    # Calculate the vendor over-delivery rate
-    over_delivery_rate_df = calculate_over_delivery_rate(inbound_delivery, purchase_order_items, purchase_orders, vendors)
+    """ 
 
-    print("Final Vendor Over-Delivery Rate DataFrame:")
-    print(over_delivery_rate_df)
+     
 
-    def score_over_delivered(over_delivery_rate):
-        if over_delivery_rate <= 0:
-            return 10
-        elif over_delivery_rate <= 5:
-            return 8
-        elif over_delivery_rate <= 10:
-            return 6
-        elif over_delivery_rate <= 15:
-            return 4
-        elif over_delivery_rate <= 20:
-            return 2
-        else:
-            return 0
+    purchase_order_query = """ 
 
-    # Applying the scoring function
-    over_delivery_rate_df['score'] = over_delivery_rate_df['over_delivery_rate'].apply(score_over_delivered)
+        SELECT po_id, vendor_id 
 
-    # Print the df with score for each item
-    print(over_delivery_rate_df[['vendor_id', 'vendor_name', 'over_delivery_rate', 'score']])
+        FROM purchase_order_header; 
 
-    #returning df with score against each item 
-    return over_delivery_rate_df[['vendor_id', 'vendor_name', 'over_delivery_rate', 'score']]
+    """ 
 
-# Run the main function
-if __name__ == "__main__":
-    main()
+     
+
+    vendor_master_query = """ 
+
+        SELECT vendor_id, vendor_name 
+
+        FROM vendor_master; 
+
+    """ 
+
+     
+
+    #fetching data from the database 
+
+    inbound_delivery = dbManager.fetch_data(inbound_delivery_query) 
+
+    purchase_order_item = dbManager.fetch_data(purchase_order_item_query) 
+
+    purchase_order_header = dbManager.fetch_data(purchase_order_query) 
+
+    vendor_master = dbManager.fetch_data(vendor_master_query) 
+
+ 
+
+    #merging inbound_delivery with purchase_order_item on 'po_id' and 'mat_id' 
+
+    merged_data = inbound_delivery.merge(purchase_order_item, on=['po_id', 'mat_id'], how='left') 
+
+ 
+
+    #calculate over-delivery rate 
+
+    merged_data['over_delivery_rate'] = ((merged_data['inbound_received_qty'] - merged_data['po_qty']) / merged_data['po_qty']) * 100 
+
+    merged_data['over_delivery_rate'] = merged_data['over_delivery_rate'].apply(lambda x: x if x > 0 else 0)  # Only positive values, else 0 
+
+ 
+
+    #merge with purchase_order_header to get vendor information 
+
+    merged_data = merged_data.merge(purchase_order_header, on='po_id', how='left') 
+
+ 
+
+    #scoring function for over-delivered rates 
+
+    def score_over_delivered(over_delivered_rate): 
+
+        if over_delivered_rate == 0: 
+
+            return 10 
+
+        elif over_delivered_rate <= 5: 
+
+            return 8 
+
+        elif over_delivered_rate <= 10: 
+
+            return 6 
+
+        elif over_delivered_rate <= 15: 
+
+            return 4 
+
+        elif over_delivered_rate <= 20: 
+
+            return 2 
+
+        else: 
+
+            return 0 
+
+ 
+
+    #applying the scoring function 
+
+    merged_data['over_delivery_score'] = merged_data['over_delivery_rate'].apply(score_over_delivered) 
+
+ 
+
+    #merge with vendor_master to get vendor names 
+
+    final_data = merged_data.merge(vendor_master, on='vendor_id', how='left') 
+
+ 
+
+    return final_data[[ 'mat_id', 'over_delivery_rate', 'over_delivery_score']]

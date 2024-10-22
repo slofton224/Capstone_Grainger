@@ -4,7 +4,7 @@ import Scorecard_DB_Manager
 def calculate_post_warranty_score() -> pd.DataFrame:
     dbManager = Scorecard_DB_Manager.ScoreCardDBManager()
 
-    # SQL query to fetch data from sales_order_item table
+    # 
     sales_order_item_query = """
         SELECT so_id, mat_id, qty, so_returned_against, so_pre_post_warranty 
         FROM sales_order_item;

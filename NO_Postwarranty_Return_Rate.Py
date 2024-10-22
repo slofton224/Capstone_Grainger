@@ -2,7 +2,7 @@
 
 
 import pandas as pd
-import sqlite3
+
 
 # Connecting to the database
 def connect_to_database(db_name):

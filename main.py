@@ -41,3 +41,12 @@ print(score_postw_df)
 # pre warranty score against each item
 score_prew_df = calculate_pre_warranty_score()  
 print(score_prew_df)
+
+score_df = score_cost_variance_df[['mat_id', 'cost_variance_score']].merge(score_over_delivery_df[['mat_id', 'over_delivered_score']], on='mat_id', how='left')
+score_df = score_df.merge(score_under_delivered_df[['mat_id', 'under_delivered_score']], on='mat_id', how='left')
+score_df = score_df.merge(score_on_time_df[['mat_id', 'on_time_delivery_score']], on='mat_id', how='left')
+score_df = score_df.merge(score_customer_review_df[['mat_id', 'customer_review_score']], on='mat_id', how='left')
+score_df = score_df.merge(score_defect_df[['mat_id', 'defect_rate_score']], on='mat_id', how='left')
+score_df = score_df.merge(score_postw_df[['mat_id', 'post_warranty_score']], on='mat_id', how='left')
+score_df = score_df.merge(score_prew_df[['mat_id', 'pre_warranty_score']], on='mat_id', how='left')
+print(score_df)

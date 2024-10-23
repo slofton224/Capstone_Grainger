@@ -40,6 +40,6 @@ def calculate_customer_review_score() -> pd.DataFrame:
         else:
             return 10
  
-    average_rating['score'] = average_rating['average_customer_rating'].apply(score_rating)
+    average_rating['customer_review_score'] = average_rating['average_customer_rating'].apply(score_rating)
 
-    return average_rating[['mat_id', 'average_customer_rating', 'score']]  # Include the score in the return
+    return average_rating[['mat_id', 'average_customer_rating', 'customer_review_score']]  # Include the score in the return

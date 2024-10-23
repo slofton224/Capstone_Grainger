@@ -16,10 +16,6 @@ def calculate_vendor_defect_rate() -> pd.DataFrame:
         SELECT po_id, vendor_id
         FROM purchase_order_header;  
     """
-    #purchase_info_query = """
-    #    SELECT mat_id, vendor_id 
-    #    FROM purchase_info_record;
-    #"""
 
     # Storing the query outputs in dataframes
     inbound_delivery = dbManager.fetch_data(inbound_delivery_query)
@@ -54,9 +50,7 @@ def calculate_vendor_defect_rate() -> pd.DataFrame:
             return 0
 
     # Applying the scoring function
-    defect_rate['score'] = defect_rate['defect_rate'].apply(score_defect)
+    defect_rate['defect_rate_score'] = defect_rate['defect_rate'].apply(score_defect)
 
-    #merged_vendor = defect_rate.merge(purchase_info, on='mat_id', how='left')
-
-    return defect_rate[['mat_id', 'defect_rate', 'score']]
+    return defect_rate[['mat_id', 'defect_rate', 'defect_rate_score']]
 

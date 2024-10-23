@@ -42,10 +42,10 @@ def calculate_post_warranty_score() -> pd.DataFrame:
             return 0
 
     # Applying the scoring function
-    summary['score'] = summary['post_warranty_ratio'].apply(score_post_warranty)
+    summary['post_warranty_score'] = summary['post_warranty_ratio'].apply(score_post_warranty)
 
     # Returning the DataFrame with mat_id, post warranty ratio, and score
-    return summary[['mat_id', 'post_warranty_ratio', 'score']]
+    return summary[['mat_id', 'post_warranty_ratio', 'post_warranty_score']]
 
 # Example of calling the function
 # df_post_warranty_score = calculate_post_warranty_score()

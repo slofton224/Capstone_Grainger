@@ -56,6 +56,6 @@ def calculate_on_time_delivery_rate() -> pd.DataFrame:
             return 10
 
     # Applying the scoring function
-    on_time_rate['score'] = on_time_rate['on_time_delivery_rate'].apply(score_on_time)
+    on_time_rate['on_time_delivery_score'] = on_time_rate['on_time_delivery_rate'].apply(score_on_time)
 
-    return on_time_rate[['mat_id', 'on_time_delivery_rate', 'score']]
+    return on_time_rate[['mat_id', 'on_time_delivery_rate', 'on_time_delivery_score']]
